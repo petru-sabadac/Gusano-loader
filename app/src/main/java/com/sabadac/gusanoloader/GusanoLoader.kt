@@ -22,11 +22,66 @@ class GusanoLoader @JvmOverloads constructor(
     private val bitmapCanvas = Canvas(bitmap)
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val positions = Array(9) { RectF() }
 
-    private var buttonRectF = RectF()
 
     init {
-        paint.color = Color.RED
+        positions[0].left = -dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
+                dpToPx(squareDistance, context)
+        positions[0].top = -dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
+                dpToPx(squareDistance, context)
+        positions[0].right = -dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
+        positions[0].bottom = -dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
+
+        positions[1].left = -dpToPx(squareSide / 2, context)
+        positions[1].top = -dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
+                dpToPx(squareDistance, context)
+        positions[1].right = dpToPx(squareSide / 2, context)
+        positions[1].bottom = -dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
+
+        positions[2].left = dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
+        positions[2].top = -dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
+                dpToPx(squareDistance, context)
+        positions[2].right = dpToPx(squareSide / 2, context) + dpToPx(squareSide, context) +
+                dpToPx(squareDistance, context)
+        positions[2].bottom = -dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
+
+        positions[3].left = -dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
+                dpToPx(squareDistance, context)
+        positions[3].top = -dpToPx(squareSide / 2, context)
+        positions[3].right = -dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
+        positions[3].bottom = dpToPx(squareSide / 2, context)
+
+        positions[4].left = -dpToPx(squareSide / 2, context)
+        positions[4].top = -dpToPx(squareSide / 2, context)
+        positions[4].right = dpToPx(squareSide / 2, context)
+        positions[4].bottom = dpToPx(squareSide / 2, context)
+
+        positions[5].left = dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
+        positions[5].top = -dpToPx(squareSide / 2, context)
+        positions[5].right = dpToPx(squareSide / 2, context) + dpToPx(squareSide, context) +
+                dpToPx(squareDistance, context)
+        positions[5].bottom = dpToPx(squareSide / 2, context)
+
+        positions[6].left = -dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
+                dpToPx(squareDistance, context)
+        positions[6].top = dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
+        positions[6].right = -dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
+        positions[6].bottom = dpToPx(squareSide / 2, context) + dpToPx(squareSide, context) +
+                dpToPx(squareDistance, context)
+
+        positions[7].left = -dpToPx(squareSide / 2, context)
+        positions[7].top = dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
+        positions[7].right = dpToPx(squareSide / 2, context)
+        positions[7].bottom = dpToPx(squareSide / 2, context) + dpToPx(squareSide, context) +
+                dpToPx(squareDistance, context)
+
+        positions[8].left = dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
+        positions[8].top = dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
+        positions[8].right = dpToPx(squareSide / 2, context) + dpToPx(squareSide, context) +
+                dpToPx(squareDistance, context)
+        positions[8].bottom = dpToPx(squareSide / 2, context) + dpToPx(squareSide, context) +
+                dpToPx(squareDistance, context)
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -35,127 +90,27 @@ class GusanoLoader @JvmOverloads constructor(
 
         bitmapCanvas.save()
         bitmapCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-        bitmapCanvas.rotate(45f, bitmap.width / 2f, bitmap.height / 2f)
+//        bitmapCanvas.rotate(45f, bitmap.width / 2f, bitmap.height / 2f)
 
-        paint.color = Color.TRANSPARENT
-        buttonRectF.left = bitmap.width / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
-                dpToPx(squareDistance, context)
-        buttonRectF.top = bitmap.height / 2f - dpToPx(squareSide, context) - dpToPx(squareDistance, context) -
-                dpToPx(squareSide / 2, context)
-        buttonRectF.right = bitmap.width / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
-        buttonRectF.bottom = bitmap.height / 2f - dpToPx(squareDistance, context) - dpToPx(squareSide / 2, context)
-        bitmapCanvas.drawRoundRect(
-            buttonRectF,
-            dpToPx(squareCornerRadius / 2, context),
-            dpToPx(squareCornerRadius / 2, context),
-            paint
-        )
+        positions.forEachIndexed { index, position ->
+            if (index == 0 || index == 8) {
+                paint.color = Color.TRANSPARENT
+            } else {
+                paint.color = Color.RED
+            }
 
-        paint.color = Color.RED
-        buttonRectF.left = bitmap.width / 2f - dpToPx(squareSide / 2, context)
-        buttonRectF.top = bitmap.height / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
-                dpToPx(squareDistance, context)
-        buttonRectF.right = bitmap.width / 2f + dpToPx(squareSide / 2, context)
-        buttonRectF.bottom = bitmap.height / 2f - dpToPx(squareDistance, context) - dpToPx(squareSide / 2, context)
-        bitmapCanvas.drawRoundRect(
-            buttonRectF,
-            dpToPx(squareCornerRadius / 2, context),
-            dpToPx(squareCornerRadius / 2, context),
-            paint
-        )
+            position.left = bitmap.width / 2f + position.left
+            position.top = bitmap.height / 2f + position.top
+            position.right = bitmap.width / 2f + position.right
+            position.bottom = bitmap.height / 2f + position.bottom
 
-        paint.color = Color.RED
-        buttonRectF.left = bitmap.width / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
-        buttonRectF.top = bitmap.height / 2f - dpToPx(squareSide, context) - dpToPx(squareDistance, context) -
-                dpToPx(squareSide / 2, context)
-        buttonRectF.right = bitmap.width / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context) +
-                dpToPx(squareSide, context)
-        buttonRectF.bottom = bitmap.height / 2f - dpToPx(squareDistance, context) - dpToPx(squareSide / 2, context)
-        bitmapCanvas.drawRoundRect(
-            buttonRectF,
-            dpToPx(squareCornerRadius / 2, context),
-            dpToPx(squareCornerRadius / 2, context),
-            paint
-        )
-
-        paint.color = Color.RED
-        buttonRectF.left = bitmap.width / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
-                dpToPx(squareDistance, context)
-        buttonRectF.top = bitmap.height / 2f - dpToPx(squareSide / 2, context)
-        buttonRectF.right = bitmap.width / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
-        buttonRectF.bottom = bitmap.height / 2f + dpToPx(squareSide / 2, context)
-        bitmapCanvas.drawRoundRect(
-            buttonRectF,
-            dpToPx(squareCornerRadius / 2, context),
-            dpToPx(squareCornerRadius / 2, context),
-            paint
-        )
-
-        paint.color = Color.RED
-        buttonRectF.left = (bitmap.width - dpToPx(squareSide, context)) / 2f
-        buttonRectF.top = (bitmap.height - dpToPx(squareSide, context)) / 2f
-        buttonRectF.right = (bitmap.width + dpToPx(squareSide, context)) / 2f
-        buttonRectF.bottom = (bitmap.height + dpToPx(squareSide, context)) / 2f
-        bitmapCanvas.drawRoundRect(
-            buttonRectF,
-            dpToPx(squareCornerRadius / 2, context),
-            dpToPx(squareCornerRadius / 2, context),
-            paint
-        )
-
-        paint.color = Color.RED
-        buttonRectF.left = bitmap.width / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
-        buttonRectF.top = bitmap.height / 2f - dpToPx(squareSide / 2, context)
-        buttonRectF.right = bitmap.width / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context) +
-                dpToPx(squareSide, context)
-        buttonRectF.bottom = bitmap.height / 2f + dpToPx(squareSide / 2, context)
-        bitmapCanvas.drawRoundRect(
-            buttonRectF,
-            dpToPx(squareCornerRadius / 2, context),
-            dpToPx(squareCornerRadius / 2, context),
-            paint
-        )
-
-        paint.color = Color.RED
-        buttonRectF.left = bitmap.width / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
-                dpToPx(squareDistance, context)
-        buttonRectF.top = bitmap.height / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
-        buttonRectF.right = bitmap.width / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
-        buttonRectF.bottom = bitmap.height / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context) +
-                dpToPx(squareSide, context)
-        bitmapCanvas.drawRoundRect(
-            buttonRectF,
-            dpToPx(squareCornerRadius / 2, context),
-            dpToPx(squareCornerRadius / 2, context),
-            paint
-        )
-
-        paint.color = Color.RED
-        buttonRectF.left = (bitmap.width - dpToPx(squareSide, context)) / 2f
-        buttonRectF.top = bitmap.height / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
-        buttonRectF.right = (bitmap.width + dpToPx(squareSide, context)) / 2f
-        buttonRectF.bottom = bitmap.height / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context) +
-                dpToPx(squareSide, context)
-        bitmapCanvas.drawRoundRect(
-            buttonRectF,
-            dpToPx(squareCornerRadius / 2, context),
-            dpToPx(squareCornerRadius / 2, context),
-            paint
-        )
-
-        paint.color = Color.TRANSPARENT
-        buttonRectF.left = bitmap.width / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
-        buttonRectF.top = bitmap.height / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
-        buttonRectF.right = bitmap.width / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context) +
-                dpToPx(squareSide, context)
-        buttonRectF.bottom = bitmap.height / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context) +
-                dpToPx(squareSide, context)
-        bitmapCanvas.drawRoundRect(
-            buttonRectF,
-            dpToPx(squareCornerRadius / 2, context),
-            dpToPx(squareCornerRadius / 2, context),
-            paint
-        )
+            bitmapCanvas.drawRoundRect(
+                position,
+                dpToPx(squareCornerRadius / 2, context),
+                dpToPx(squareCornerRadius / 2, context),
+                paint
+            )
+        }
 
         canvas?.drawBitmap(bitmap, (width - bitmap.width) / 2f, (height - bitmap.height) / 2f, bitmapPaint)
 
