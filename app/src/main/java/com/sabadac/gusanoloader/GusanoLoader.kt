@@ -24,6 +24,7 @@ class GusanoLoader @JvmOverloads constructor(
     private val bitmap = Bitmap.createBitmap(canvasSide.toInt(), canvasSide.toInt(), Bitmap.Config.ARGB_8888)
     private val bitmapCanvas = Canvas(bitmap)
     private val duration = 300L
+    private val colorTransitionDuration = 5000L
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val positions = Array(9) { RectF() }
     private val squares = Array(7) { RectF() }
@@ -62,7 +63,7 @@ class GusanoLoader @JvmOverloads constructor(
             ContextCompat.getColor(context, R.color.squareSecondColor),
             ContextCompat.getColor(context, R.color.squareThirdColor)
         )
-        colorAnimator.duration = 6000
+        colorAnimator.duration = colorTransitionDuration
         colorAnimator.repeatCount = ValueAnimator.INFINITE
         colorAnimator.repeatMode = ValueAnimator.REVERSE
         colorAnimator.setEvaluator(ArgbEvaluator())
@@ -105,61 +106,61 @@ class GusanoLoader @JvmOverloads constructor(
     }
 
     private fun initPositions() {
-        positions[0].left = bitmap.width / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
+        positions[0].left = (bitmap.width - dpToPx(squareSide, context)) / 2f - dpToPx(squareSide, context) -
                 dpToPx(squareDistance, context)
-        positions[0].top = bitmap.height / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
+        positions[0].top = (bitmap.height - dpToPx(squareSide, context)) / 2f - dpToPx(squareSide, context) -
                 dpToPx(squareDistance, context)
-        positions[0].right = bitmap.width / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
-        positions[0].bottom = bitmap.height / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
+        positions[0].right = (bitmap.width - dpToPx(squareSide, context)) / 2f - dpToPx(squareDistance, context)
+        positions[0].bottom = (bitmap.height - dpToPx(squareSide, context)) / 2f - dpToPx(squareDistance, context)
 
-        positions[1].left = bitmap.width / 2f - dpToPx(squareSide / 2, context)
-        positions[1].top = bitmap.height / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
+        positions[1].left = (bitmap.width - dpToPx(squareSide, context)) / 2f
+        positions[1].top = (bitmap.height - dpToPx(squareSide, context)) / 2f - dpToPx(squareSide, context) -
                 dpToPx(squareDistance, context)
-        positions[1].right = bitmap.width / 2f + dpToPx(squareSide / 2, context)
-        positions[1].bottom = bitmap.height / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
+        positions[1].right = (bitmap.width + dpToPx(squareSide, context)) / 2f
+        positions[1].bottom = (bitmap.height - dpToPx(squareSide, context)) / 2f - dpToPx(squareDistance, context)
 
-        positions[2].left = bitmap.width / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
-        positions[2].top = bitmap.height / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
+        positions[2].left = (bitmap.width + dpToPx(squareSide, context)) / 2f + dpToPx(squareDistance, context)
+        positions[2].top = (bitmap.height - dpToPx(squareSide, context)) / 2f - dpToPx(squareSide, context) -
                 dpToPx(squareDistance, context)
-        positions[2].right = bitmap.width / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareSide, context) +
+        positions[2].right = (bitmap.width + dpToPx(squareSide, context)) / 2f + dpToPx(squareSide, context) +
                 dpToPx(squareDistance, context)
-        positions[2].bottom = bitmap.height / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
+        positions[2].bottom = (bitmap.height - dpToPx(squareSide, context)) / 2f - dpToPx(squareDistance, context)
 
-        positions[3].left = bitmap.width / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
+        positions[3].left = (bitmap.width - dpToPx(squareSide, context)) / 2f - dpToPx(squareSide, context) -
                 dpToPx(squareDistance, context)
-        positions[3].top = bitmap.height / 2f - dpToPx(squareSide / 2, context)
-        positions[3].right = bitmap.width / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
-        positions[3].bottom = bitmap.height / 2f + dpToPx(squareSide / 2, context)
+        positions[3].top = (bitmap.height - dpToPx(squareSide, context)) / 2f
+        positions[3].right = (bitmap.width - dpToPx(squareSide, context)) / 2f - dpToPx(squareDistance, context)
+        positions[3].bottom = (bitmap.height + dpToPx(squareSide, context)) / 2f
 
-        positions[4].left = bitmap.width / 2f - dpToPx(squareSide / 2, context)
-        positions[4].top = bitmap.height / 2f - dpToPx(squareSide / 2, context)
-        positions[4].right = bitmap.width / 2f + dpToPx(squareSide / 2, context)
-        positions[4].bottom = bitmap.height / 2f + dpToPx(squareSide / 2, context)
+        positions[4].left = (bitmap.width - dpToPx(squareSide, context)) / 2f
+        positions[4].top = (bitmap.height - dpToPx(squareSide, context)) / 2f
+        positions[4].right = (bitmap.width + dpToPx(squareSide, context)) / 2f
+        positions[4].bottom = (bitmap.height + dpToPx(squareSide, context)) / 2f
 
-        positions[5].left = bitmap.width / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
-        positions[5].top = bitmap.height / 2f - dpToPx(squareSide / 2, context)
-        positions[5].right = bitmap.width / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareSide, context) +
+        positions[5].left = (bitmap.width + dpToPx(squareSide, context)) / 2f + dpToPx(squareDistance, context)
+        positions[5].top = (bitmap.height - dpToPx(squareSide, context)) / 2f
+        positions[5].right = (bitmap.width + dpToPx(squareSide, context)) / 2f + dpToPx(squareSide, context) +
                 dpToPx(squareDistance, context)
-        positions[5].bottom = bitmap.height / 2f + dpToPx(squareSide / 2, context)
+        positions[5].bottom = (bitmap.height + dpToPx(squareSide, context)) / 2f
 
-        positions[6].left = bitmap.width / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareSide, context) -
+        positions[6].left = (bitmap.width - dpToPx(squareSide, context)) / 2f - dpToPx(squareSide, context) -
                 dpToPx(squareDistance, context)
-        positions[6].top = bitmap.height / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
-        positions[6].right = bitmap.width / 2f - dpToPx(squareSide / 2, context) - dpToPx(squareDistance, context)
-        positions[6].bottom = bitmap.height / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareSide, context) +
-                dpToPx(squareDistance, context)
-
-        positions[7].left = bitmap.width / 2f - dpToPx(squareSide / 2, context)
-        positions[7].top = bitmap.height / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
-        positions[7].right = bitmap.width / 2f + dpToPx(squareSide / 2, context)
-        positions[7].bottom = bitmap.height / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareSide, context) +
+        positions[6].top = (bitmap.height + dpToPx(squareSide, context)) / 2f + dpToPx(squareDistance, context)
+        positions[6].right = (bitmap.width - dpToPx(squareSide, context)) / 2f - dpToPx(squareDistance, context)
+        positions[6].bottom = (bitmap.height + dpToPx(squareSide, context)) / 2f + dpToPx(squareSide, context) +
                 dpToPx(squareDistance, context)
 
-        positions[8].left = bitmap.width / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
-        positions[8].top = bitmap.height / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareDistance, context)
-        positions[8].right = bitmap.width / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareSide, context) +
+        positions[7].left = (bitmap.width - dpToPx(squareSide, context)) / 2f
+        positions[7].top = (bitmap.height + dpToPx(squareSide, context)) / 2f + dpToPx(squareDistance, context)
+        positions[7].right = (bitmap.width + dpToPx(squareSide, context)) / 2f
+        positions[7].bottom = (bitmap.height + dpToPx(squareSide, context)) / 2f + dpToPx(squareSide, context) +
                 dpToPx(squareDistance, context)
-        positions[8].bottom = bitmap.height / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareSide, context) +
+
+        positions[8].left = (bitmap.width + dpToPx(squareSide, context)) / 2f + dpToPx(squareDistance, context)
+        positions[8].top = (bitmap.height + dpToPx(squareSide, context)) / 2f + dpToPx(squareDistance, context)
+        positions[8].right = (bitmap.width + dpToPx(squareSide, context)) / 2f + dpToPx(squareSide, context) +
+                dpToPx(squareDistance, context)
+        positions[8].bottom = (bitmap.height + dpToPx(squareSide, context)) / 2f + dpToPx(squareSide, context) +
                 dpToPx(squareDistance, context)
     }
 
