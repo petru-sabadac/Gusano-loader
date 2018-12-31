@@ -3,10 +3,11 @@ package com.sabadac.gusanoloader
 import android.animation.*
 import android.content.Context
 import android.graphics.*
+import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 
 class GusanoLoader @JvmOverloads constructor(
     context: Context,
@@ -18,28 +19,32 @@ class GusanoLoader @JvmOverloads constructor(
     private val squareSide = 40
     private val squareDistance = 8
     private val squareCornerRadius = 10
-
+    private val delay = 150L
     private val bitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val bitmap = Bitmap.createBitmap(canvasSide.toInt(), canvasSide.toInt(), Bitmap.Config.ARGB_8888)
     private val bitmapCanvas = Canvas(bitmap)
-
+    private val duration = 300L
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val positions = Array(9) { RectF() }
     private val squares = Array(7) { RectF() }
 
     init {
         initPositions()
+        restartSquaresPositions()
+        playAnimations()
+    }
 
+    private fun playAnimations() {
         val animatorSet = AnimatorSet()
-        animatorSet.playSequentially(
-            moveFromTo(1, 2),
-            moveFromTo(0, 1),
-            moveFromTo(3, 0),
-            moveFromTo(6, 3),
-            moveFromTo(7, 6),
-            moveFromTo(4, 7),
-            moveFromTo(5, 4),
-            moveFromTo(2, 5)
+        animatorSet.playTogether(
+            moveFromTo(1, 2, 0L),
+            moveFromTo(0, 1, 1 * duration - 1 * delay),
+            moveFromTo(3, 0, 2 * duration - 2 * delay),
+            moveFromTo(6, 3, 3 * duration - 3 * delay),
+            moveFromTo(7, 6, 4 * duration - 4 * delay),
+            moveFromTo(4, 7, 5 * duration - 5 * delay),
+            moveFromTo(5, 4, 6 * duration - 6 * delay),
+            moveFromTo(2, 5, 7 * duration - 7 * delay)
         )
 
         animatorSet.addListener(object : AnimatorListenerAdapter() {
@@ -50,9 +55,27 @@ class GusanoLoader @JvmOverloads constructor(
             }
         })
         animatorSet.start()
+
+        val colorAnimator = ValueAnimator.ofObject(
+            ArgbEvaluator(),
+            ContextCompat.getColor(context, R.color.squareFirstColor),
+            ContextCompat.getColor(context, R.color.squareSecondColor),
+            ContextCompat.getColor(context, R.color.squareThirdColor)
+        )
+        colorAnimator.duration = 6000
+        colorAnimator.repeatCount = ValueAnimator.INFINITE
+        colorAnimator.repeatMode = ValueAnimator.REVERSE
+        colorAnimator.setEvaluator(ArgbEvaluator())
+        colorAnimator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
+            override fun onAnimationUpdate(animation: ValueAnimator?) {
+                paint.color = animation?.animatedValue as Int
+                invalidate()
+            }
+        })
+        colorAnimator.start()
     }
 
-    private fun moveFromTo(from: Int, to: Int): ValueAnimator {
+    private fun moveFromTo(from: Int, to: Int, withDelay: Long): ValueAnimator {
         val leftProperty = "left"
         val topProperty = "top"
         val rightProperty = "right"
@@ -65,8 +88,9 @@ class GusanoLoader @JvmOverloads constructor(
 
         val valueAnimator = ValueAnimator()
         valueAnimator.setValues(leftValueHolder, topValueHolder, rightValueHolder, bottomValueHolder)
-        valueAnimator.duration = 200
-        valueAnimator.interpolator = AccelerateDecelerateInterpolator()
+        valueAnimator.duration = duration
+        valueAnimator.startDelay = withDelay
+        valueAnimator.interpolator = DecelerateInterpolator()
         valueAnimator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
             override fun onAnimationUpdate(animation: ValueAnimator?) {
                 val index = if (from < 2) from else from - 1
@@ -137,8 +161,6 @@ class GusanoLoader @JvmOverloads constructor(
                 dpToPx(squareDistance, context)
         positions[8].bottom = bitmap.height / 2f + dpToPx(squareSide / 2, context) + dpToPx(squareSide, context) +
                 dpToPx(squareDistance, context)
-
-        restartSquaresPositions()
     }
 
     private fun restartSquaresPositions() {
@@ -162,8 +184,6 @@ class GusanoLoader @JvmOverloads constructor(
         bitmapCanvas.rotate(45f, bitmap.width / 2f, bitmap.height / 2f)
 
         squares.forEachIndexed { index, position ->
-
-            paint.color = Color.RED
 
             bitmapCanvas.drawRoundRect(
                 position,
