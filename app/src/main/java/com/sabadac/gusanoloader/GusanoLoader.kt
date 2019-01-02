@@ -38,7 +38,7 @@ class GusanoLoader @JvmOverloads constructor(
     private fun playAnimations() {
         val animatorSet = AnimatorSet()
         animatorSet.playTogether(
-            moveFromTo(1, 2, 0L),
+            moveFromTo(1, 2),
             moveFromTo(0, 1, 1 * duration - 1 * delay),
             moveFromTo(3, 0, 2 * duration - 2 * delay),
             moveFromTo(6, 3, 3 * duration - 3 * delay),
@@ -76,7 +76,7 @@ class GusanoLoader @JvmOverloads constructor(
         colorAnimator.start()
     }
 
-    private fun moveFromTo(from: Int, to: Int, withDelay: Long): ValueAnimator {
+    private fun moveFromTo(from: Int, to: Int, withDelay: Long = 0L): ValueAnimator {
         val leftProperty = "left"
         val topProperty = "top"
         val rightProperty = "right"
