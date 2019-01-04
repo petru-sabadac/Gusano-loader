@@ -77,34 +77,24 @@ class GusanoLoader @JvmOverloads constructor(
     }
 
     private fun moveFromTo(from: Int, to: Int, withDelay: Long = 0L): ValueAnimator {
-        val leftProperty = "left"
-        val topProperty = "top"
-        val rightProperty = "right"
-        val bottomProperty = "bottom"
-        val leftValueHolder = PropertyValuesHolder.ofFloat(leftProperty, positions[from].left, positions[to].left)
-        val topValueHolder = PropertyValuesHolder.ofFloat(topProperty, positions[from].top, positions[to].top)
-        val rightValueHolder = PropertyValuesHolder.ofFloat(rightProperty, positions[from].right, positions[to].right)
-        val bottomValueHolder =
-            PropertyValuesHolder.ofFloat(bottomProperty, positions[from].bottom, positions[to].bottom)
-
-        val valueAnimator = ValueAnimator()
-        valueAnimator.setValues(leftValueHolder, topValueHolder, rightValueHolder, bottomValueHolder)
+        val valueAnimator = ValueAnimator.ofFloat(0f, 1f)
         valueAnimator.duration = duration
         valueAnimator.startDelay = withDelay
         valueAnimator.interpolator = DecelerateInterpolator()
         valueAnimator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
             override fun onAnimationUpdate(animation: ValueAnimator?) {
+                val fraction = animation!!.animatedFraction
                 val index = if (from < 2) from else from - 1
-                squares[index].left = animation?.getAnimatedValue(leftProperty) as Float
-                squares[index].top = animation?.getAnimatedValue(topProperty) as Float
-                squares[index].right = animation?.getAnimatedValue(rightProperty) as Float
-                squares[index].bottom = animation?.getAnimatedValue(bottomProperty) as Float
+                squares[index].left = positions[from].left + fraction * (positions[to].left - positions[from].left)
+                squares[index].right = positions[from].right + fraction * (positions[to].right - positions[from].right)
+                squares[index].top = positions[from].top + fraction * (positions[to].top - positions[from].top)
+                squares[index].bottom = positions[from].bottom + fraction *
+                        (positions[to].bottom - positions[from].bottom)
                 invalidate()
             }
         })
         return valueAnimator
     }
-
     private fun initPositions() {
         positions[0].left = (bitmap.width - dpToPx(squareSide, context)) / 2f - dpToPx(squareSide, context) -
                 dpToPx(squareDistance, context)
