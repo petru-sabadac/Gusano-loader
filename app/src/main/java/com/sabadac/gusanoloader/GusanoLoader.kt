@@ -4,10 +4,10 @@ import android.animation.*
 import android.content.Context
 import android.graphics.*
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.animation.PathInterpolatorCompat
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
-import android.view.animation.DecelerateInterpolator
 
 class GusanoLoader @JvmOverloads constructor(
     context: Context,
@@ -80,7 +80,7 @@ class GusanoLoader @JvmOverloads constructor(
         val valueAnimator = ValueAnimator.ofFloat(0f, 1f)
         valueAnimator.duration = duration
         valueAnimator.startDelay = withDelay
-        valueAnimator.interpolator = DecelerateInterpolator()
+        valueAnimator.interpolator = PathInterpolatorCompat.create(0.42f, 0.0f, 0.58f, 1.0f)
         valueAnimator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
             override fun onAnimationUpdate(animation: ValueAnimator?) {
                 val fraction = animation!!.animatedFraction
